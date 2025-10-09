@@ -1,8 +1,8 @@
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
-import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import API from "../api/axios.js";
 
 const Reservation = () => {
   const [firstName, setFirstName] = useState("");
@@ -16,16 +16,9 @@ const Reservation = () => {
   const handleReservation = async (e) => {
     e.preventDefault();
     try {
-    const { data } = await axios.post(
-      "http://localhost:4000/api/v1/reservation/send",
-      { firstName, lastName, email, phone, date, time },
-      {
-        headers: {
-        "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
+      const { data } = await API.post("/reservation/send", {
+        firstName, lastName, email, phone, date, time
+      });
       toast.success(data.message);
       setFirstName("");
       setLastName("");
