@@ -10,7 +10,7 @@ dotenv.config({path:"./config/config.env"}); // Configuring dotenv to load envir
 
 // Setting up CORS middleware with specific options
 app.use(cors({
-    origin: [process.env.FRONTEND_URL], // Allowing requests from the specified frontend URL
+    origin: process.env.FRONTEND_URL, // Allowing requests from the specified frontend URL
     methods: ["POST", "OPTIONS"],  // Allow POST and preflight OPTIONS requests
     credentials: true,   // Allowing credentials (cookies, authorization headers, etc.)
 }));
