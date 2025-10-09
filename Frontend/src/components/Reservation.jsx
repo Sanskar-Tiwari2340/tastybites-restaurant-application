@@ -1,5 +1,5 @@
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios.js";
@@ -11,13 +11,15 @@ const Reservation = () => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [phone, setPhone] = useState(0);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleReservation = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const { data } = await API.post("/reservation/send", {
-        firstName, lastName, email, phone, date, time
+        firstName, lastName, email, phone, date, time,
       });
       toast.success(data.message);
       setFirstName("");
@@ -28,7 +30,9 @@ const Reservation = () => {
       setDate("");
       navigate("/success");
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message || "An error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,11 +90,13 @@ const Reservation = () => {
                   onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
-              <button type="submit" onClick={handleReservation}>
-                RESERVE NOW{" "}
-                <span>
-                  <HiOutlineArrowNarrowRight />
-                </span>
+              <button type="submit" onClick={handleReservation} disabled={loading}>
+                {loading ? "RESERVING..." : (
+                  <Fragment>
+                    RESERVE NOW{" "}
+                    <span><HiOutlineArrowNarrowRight /></span>
+                  </Fragment>
+                )}
               </button>
             </form>
           </div>
